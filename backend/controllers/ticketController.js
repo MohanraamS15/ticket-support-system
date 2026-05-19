@@ -14,11 +14,42 @@ const getTicket=async (req,res)=>{
 }
 
 const getAllTicket=async (req,res)=>{
-    const ticket=await Ticket.find({});
+
+    let {status,category,page,limit,sort}=req.query;
+    const queryObj={};
+
+    if(status){
+        queryObj.status=status;
+    }
+
+    if(category){
+        queryObj.category=category;
+    }
     
+    sort=sort||'title';
+
+
+    page=Number(page) || 1;
+    limit=Number(limit) || 10;
+
+    const skip=(page-1)*limit;
+
+    const totalTicket= await Ticket.countDocuments(queryObj);
+
+    const tickets=await Ticket.find(queryObj)
+            .skip(skip)
+            .limit(limit)
+            .sort(sort);
     
     console.log('getAllTicket');
-    return res.status(200).json(ticket);
+
+    const totalPages=Math.ceil(totalTicket/limit);
+    return res.status(200).json({
+        totalPages,
+        currentPage:page,
+        totalTicket,
+        tickets
+    });
     
 }
 

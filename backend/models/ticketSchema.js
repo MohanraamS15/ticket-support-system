@@ -3,12 +3,12 @@ const mongoose=require('mongoose');
 const TicketSchema=new mongoose.Schema({
     title:{
         type:String,
-        required:true,
+        required:[true,'provide the title'],
         trim:true,
     },
     description:{
         type:String,
-        required:true
+        required:[true,'provide the description'],
     },
     category:{
         type:String,
@@ -19,7 +19,7 @@ const TicketSchema=new mongoose.Schema({
             'plumbing',
             'other'
         ],
-        required:true
+        required:[true,'provide the category'],
     },
     status:{
         type:String,

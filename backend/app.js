@@ -4,10 +4,12 @@ const express=require('express');
 const app=express();
 
 const ticketRoute=require('./routes/ticketRoutes');
+const authRoute=require('./routes/authRoutes');
 
 const mongoDB=require('mongoose');
 app.use(express.json());
 
+app.use('/',authRoute);
 app.use('/ticket',ticketRoute);
 
 
