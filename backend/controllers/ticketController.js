@@ -89,6 +89,66 @@ const deleteTicket=async (req,res)=>{
     
 }
 
+
+const takeTicket=async (req,res)=>{
+    const ticket=await Ticket.findByIdAndUpdate(
+        req.params.id,{
+            claimedBy:req.user.userId,
+            status:'in-progress'
+        },{
+            returnDocument:'after'
+        }
+    )
+
+    res.status(200).json(ticket);
+}
+
+
+const dashboard=async (req,res)=>{
+
+    let query={};
+
+    if(req.user.role==='admin'){
+        query={};
+    }
+    else if(req.user.role==='user'){
+        query={
+            createdBy:req.user.userId
+        }
+    }
+    else{
+        query={
+            category:req.user.role
+        }
+    }
+    const total=await Ticket.countDocuments(query);
+
+    const open=await Ticket.countDocuments({
+        ...query,
+        status:'open'
+    });
+
+    const progress=await Ticket.countDocuments({
+        ...query,
+        status:'progress'
+    });
+
+    const resolved=await Ticket.countDocuments({
+        ...query,
+        status:'resolved'
+    });
+
+    const tickets=await Ticket.find({
+        ...query
+    }).sort('-createdAt');
+
+    res.json({
+        total,open,progress,resolved,tickets
+    });
+
+}
+
+
 module.exports={
-    createTicket,getTicket,getAllTicket,updateTicket,deleteTicket
+    createTicket,getTicket,getAllTicket,updateTicket,deleteTicket,takeTicket,dashboard
 };
