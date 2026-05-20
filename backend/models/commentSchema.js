@@ -2,7 +2,7 @@ const mongoose=require('mongoose');
 
 const commentSchema=new mongoose.Schema({
     ticketId:{
-        type:mongoose.Schema.Types.objectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:'ticket',
         required:true
     },

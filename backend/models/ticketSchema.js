@@ -31,6 +31,11 @@ const TicketSchema=new mongoose.Schema({
         enum:['low','medium','high'],
         default:'medium'
     },
+    createdBy:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        required:true
+    },
     claimedBy:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',

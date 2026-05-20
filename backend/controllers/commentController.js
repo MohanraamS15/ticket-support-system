@@ -1,6 +1,4 @@
 const Comment=require('../models/commentSchema');
-
-const Comment=require('../models/commentSchema');
 const Ticket=require('../models/ticketSchema');
 
 const createComment=async(req,res)=>{
@@ -36,6 +34,7 @@ const createComment=async(req,res)=>{
 }
 
 const getComments=async (req,res)=>{
+    const ticketId=req.params.id;
     const comments =await Comment.find({
         ticketId
     }).populate(
@@ -45,3 +44,6 @@ const getComments=async (req,res)=>{
 
     return res.status(200).json(comments);
 }
+
+
+module.exports={createComment,getComments};

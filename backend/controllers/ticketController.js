@@ -4,7 +4,7 @@ const Ticket=require('../models/ticketSchema');
 const getTicket=async (req,res)=>{
     const id=req.params.id;
 
-    const ticket=await Ticket.findbyId(id);
+    const ticket=await Ticket.findById(id);
     if(!ticket){
         return res.status(400).json({msg:"Resource not found"});
     }
@@ -16,7 +16,13 @@ const getTicket=async (req,res)=>{
 const getAllTicket=async (req,res)=>{
 
     let {status,category,page,limit,sort}=req.query;
-    const queryObj={};
+    let queryObj={};
+
+    if(req.user.role==='user'){
+        queryObj.createdBy=req.user.userId;
+    }
+
+    
 
     if(status){
         queryObj.status=status;
@@ -54,7 +60,10 @@ const getAllTicket=async (req,res)=>{
 }
 
 const createTicket=async (req,res)=>{
-    const ticket=await Ticket.create(req.body);
+    const ticket=await Ticket.create({
+        ...req.body,
+        createdBy:req.user.userId
+    });
     console.log('createTicket');
     return res.status(201).json(ticket);
     
@@ -91,6 +100,8 @@ const deleteTicket=async (req,res)=>{
 
 
 const takeTicket=async (req,res)=>{
+
+
     const ticket=await Ticket.findByIdAndUpdate(
         req.params.id,{
             claimedBy:req.user.userId,
@@ -130,7 +141,7 @@ const dashboard=async (req,res)=>{
 
     const progress=await Ticket.countDocuments({
         ...query,
-        status:'progress'
+        status:'in-progress'
     });
 
     const resolved=await Ticket.countDocuments({

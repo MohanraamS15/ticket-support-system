@@ -3,9 +3,10 @@ const express=require('express');
 const router=express.Router();
 
 const auth=require('../middleware/authenticationMiddleware');
+const authorize=require('../middleware/authorizeMiddleware');
 const {createComment,getComments}=require('../controllers/commentController');
 
-router.post('/:id/comment')
+router.route('/:id')
     .post(auth,authorize(
             'admin',
             'carpenter',

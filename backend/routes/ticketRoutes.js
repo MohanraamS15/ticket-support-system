@@ -7,6 +7,12 @@ const authorize=require('../middleware/authorizeMiddleware');
 const {createTicket,getTicket,getAllTicket,updateTicket,
     dashboard,myTickets,deleteTicket,takeTicket}=require('../controllers/ticketController')
 
+router.route('/take/:id').patch(auth,authorize(
+    'admin','carpenter','mechanical','plumbing'
+),takeTicket);
+
+router.route('/dashboard').get(auth,dashboard);
+
 router.route('/')
     .get(auth,getAllTicket)
     .post(auth,createTicket);
@@ -23,9 +29,11 @@ router.route('/:id')
     
     .delete(auth,authorize('admin'),deleteTicket);
 
-router.route('/take/:id').patch(auth,authorize,takeTicket);
 
-router.route('/dashboard',auth,dashboard);
+
+
+
+
 
 module.exports=router;
 
